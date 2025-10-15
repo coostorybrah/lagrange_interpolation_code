@@ -11,7 +11,7 @@ using namespace std;
 
 // GLOBAL VALUES
 #define data_file "data.csv"    // Csv file
-#define PRECISION 4             // decimal precision
+#define PRECISION 4             // Decimal precision
 #define FIRST_COLLUMN_WIDTH 8   // setw()
 #define SECOND_COLLUMN_WIDTH 40 // setw()
 #define THIRD_COLLUMN_WIDTH 32  // setw()
@@ -89,53 +89,85 @@ int main()
     }
 
     // UI
-    
-    
-    // RUN ONE SELECTED TEST CASE
-    // Find test case
-    string selectedTestCaseID = "1";
-    int selectedTestCaseIndex = -1;
-    for (int i = 0; i < testCases.size(); i++)
+    char option = ' ';
+    while (option != 'q' && option != 'Q')
     {
-        if (!selectedTestCaseID.compare(testCases[i].testID))
+        cout << "+---------------------------- CHUONG TRINH NOI SUY LAGRANGE ----------------------------+" << "\n"
+             << "[1] Chay 1 test case." << "\n"
+             << "[2] Chay toan bo test case." << "\n"
+             << "Nhap 'q' de thoat chuong trinh..." << "\n"
+             << "-> Input: ";
+
+        cin >> option;
+        
+        if (option == '1')
         {
-            selectedTestCaseIndex = i;
+            // RUN ONE SELECTED TEST CASE
+            // Find test case
+            int selectedTestCaseIndex = -1;
+            string selectedTestCaseID = "";
+            cout << "+---------------- AVAILABLE TEST CASES ----------------+" << "\n";
+            cout << "+" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "+" << "\n" << setfill(' ');
+            cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
+                 << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Test Function"
+                 << "|\n";
+            for (int i = 0; i < testCases.size(); i++)
+            {
+                cout << "|" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "|" << "\n" << setfill(' ')
+                     << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID
+                     << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[i].testFunction 
+                     << "|" << "\n";
+            }
+            cout << "+" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "+" << "\n" << setfill(' ');
+
+            cout << "-> Input (Nhap Test ID): ";
+            cin >> selectedTestCaseID;
+            for (int i = 0; i < testCases.size(); i++)
+            {
+                if (!selectedTestCaseID.compare(testCases[i].testID))
+                {
+                    selectedTestCaseIndex = i;
+                }
+            }
+            if (selectedTestCaseIndex != -1)
+            {
+                cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+                cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
+                     << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
+                     << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
+                     << "|" << "\n";
+        
+                cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
+                cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[selectedTestCaseIndex].testID 
+                     << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].runTestCase()
+                     << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].testFunction
+                     << "|" << "\n";
+                cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+                selectedTestCaseIndex = -1;
+            }
         }
+
+        if (option == '2')
+        {
+            // RUN ALL TEST CASES 
+            cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+            cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
+                << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
+                << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
+                << "|" << "\n";
+            for (int i = 0; i < testCases.size(); i++)
+            {
+                cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
+                cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID 
+                    << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[i].runTestCase()
+                    << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[i].testFunction 
+                    << "|" << "\n";
+            }
+            cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+        }
+        cout << "\n";
     }
 
-    // Run test case
-    if (selectedTestCaseIndex != -1)
-    {
-        cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
-        cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
-             << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
-             << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
-             << "|" << "\n";
-
-        cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
-        cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[selectedTestCaseIndex].testID 
-             << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].runTestCase()
-             << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].testFunction
-             << "|" << "\n";
-        cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
-        selectedTestCaseIndex = -1;
-    }
-
-    // RUN ALL TEST CASES 
-    cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
-    cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
-         << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
-         << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
-         << "|" << "\n";
-    for (int i = 0; i < testCases.size(); i++)
-    {
-        cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
-        cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID 
-             << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[i].runTestCase()
-             << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[i].testFunction 
-             << "|" << "\n";
-    }
-    cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
 }
 // ---------------------------------------------------------------------------------------------------------
 
@@ -197,10 +229,13 @@ vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
         for (unsigned int k = 0; k < term.size(); k++)
         {
             result[k] += term[k] * Y[i] / wi_prime;
-            result[k] = round(result[k] * pow(10, PRECISION)) / pow(10,PRECISION);
         }
     }
 
+    for (int i = 0; i < result.size(); i++)
+    {
+        result[i] = round(result[i] * pow(10, PRECISION)) / pow(10,PRECISION);
+    }
     return result;
 }
 
@@ -247,4 +282,3 @@ string lagrangePolynomialForm(vector<double> &coefficients)
 
     return result.str();
 }
-
