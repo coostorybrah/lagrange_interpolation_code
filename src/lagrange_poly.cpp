@@ -1,27 +1,30 @@
 // LIBRARIES
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <iomanip>
+#include <cmath>
 
 // NAMESPACE
 using namespace std;
 
 // GLOBAL VALUES
-#define data_file "data.csv" // Ten file csv
-#define PRECISION 4          // Gia tri lam tron so thap phan
-#define FIRST_COLLUMN_WIDTH 8 // setw()
+#define data_file "data.csv"    // Csv file
+#define PRECISION 4             // decimal precision
+#define FIRST_COLLUMN_WIDTH 8   // setw()
 #define SECOND_COLLUMN_WIDTH 40 // setw()
-#define TOTAL_WIDTH 52 // setw()
+#define THIRD_COLLUMN_WIDTH 32  // setw()
+#define TOTAL_WIDTH 84          // setw()
 
 // GLOBAL FUNCTIONS
-int dataFileCheck(vector<double> &X, vector<double> &Y, string testID); // Kiem tra du lieu dau vao
-vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y); // Tim cac he so cua ham noi suy
-string lagrangePolynomialForm(vector<double> &coefficients); // Xau chuoi
+int dataFileCheck(vector<double> &X, vector<double> &Y, string testID);   // Check input data
+vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y); // Find corresponding polynomial coefficients
+string lagrangePolynomialForm(vector<double> &coefficients);              // Convert to readable polynomial form
 
 // CLASSES
 class TestCase
 {
-    private:
-    static int totalTestCases;
-
     public:
     string testID, testFunction;
     vector<double> X;
@@ -29,7 +32,6 @@ class TestCase
     TestCase()
     {
         testID = "", testFunction = "";
-        totalTestCases++;
     }
 
     TestCase(string ID, double x, double y, string function)
@@ -38,7 +40,6 @@ class TestCase
         X.push_back(x);
         Y.push_back(y);
         testFunction = function;
-        totalTestCases++;
     }
 
     string runTestCase()
@@ -50,18 +51,12 @@ class TestCase
         vector<double> coefficients = lagrangeCoefficient(X, Y);
         return lagrangePolynomialForm(coefficients);
     }
-
-    static int getTotalTestCases()
-    {
-        return totalTestCases;
-    }
 };
-int TestCase::totalTestCases = 0; // Init tong so test case
 
 // ----------------------------------------- CHAY CHUONG TRINH ---------------------------------------------
 int main()
 {
-    // Init du lieu chung
+    // Init test case vector and data file pointer
     vector<TestCase> testCases;
     ifstream TestData(data_file);
     if (!TestData)
@@ -70,17 +65,15 @@ int main()
         return 1;
     }
 
-    // Doc file csv
+    // Read csv file
     string line;
     getline(TestData, line); // Skip header
 
     while (getline(TestData, line))
     {
-        // Doc tung dong du lieu
         stringstream ss(line);
         string ID = "", function = "", x_str = "", y_str = "";
 
-        // Luu du lieu tuong ung voi tung cot
         getline(ss, ID, ',');
         getline(ss, x_str, ',');
         getline(ss, y_str, ',');
@@ -96,20 +89,57 @@ int main()
     }
 
     // UI
+    
+    
+    // RUN ONE SELECTED TEST CASE
+    // Find test case
+    string selectedTestCaseID = "1";
+    int selectedTestCaseIndex = -1;
+    for (int i = 0; i < testCases.size(); i++)
+    {
+        if (!selectedTestCaseID.compare(testCases[i].testID))
+        {
+            selectedTestCaseIndex = i;
+        }
+    }
+
+    // Run test case
+    if (selectedTestCaseIndex != -1)
+    {
+        cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+        cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
+             << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
+             << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
+             << "|" << "\n";
+
+        cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
+        cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[selectedTestCaseIndex].testID 
+             << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].runTestCase()
+             << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].testFunction
+             << "|" << "\n";
+        cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+        selectedTestCaseIndex = -1;
+    }
 
     // RUN ALL TEST CASES 
     cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
-    cout << "|" << left << setw(FIRST_COLLUMN_WIDTH) << "   ID" << "|  " << left << setw(SECOND_COLLUMN_WIDTH) << "         Lagrange Polynomial" << "|" << "\n";
-    for (int i = 0; i < TestCase::getTotalTestCases(); i++)
+    cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
+         << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
+         << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
+         << "|" << "\n";
+    for (int i = 0; i < testCases.size(); i++)
     {
         cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
-        cout << "|   " << left << setw(FIRST_COLLUMN_WIDTH - 3) << testCases[i].testID << "|  " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[i].runTestCase() << "|" << "\n";
+        cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID 
+             << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[i].runTestCase()
+             << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[i].testFunction 
+             << "|" << "\n";
     }
     cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
 }
 // ---------------------------------------------------------------------------------------------------------
 
-// Kiem tra du lieu dau vao
+// Check input file
 int dataFileCheck(vector<double> &X, vector<double> &Y, string testID)
 {
     if (X.empty() || Y.empty())
@@ -137,7 +167,7 @@ int dataFileCheck(vector<double> &X, vector<double> &Y, string testID)
     return 0;
 }
 
-// Tim cac he so cua ham noi suy
+// Find the coefficients of each polynomial term
 vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
 {
     int n = X.size();
@@ -163,7 +193,7 @@ vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
             }
         }
 
-        // Scale by Y[i] / wi_prime
+        // Scale each term with Y[i] / wi_prime
         for (unsigned int k = 0; k < term.size(); k++)
         {
             result[k] += term[k] * Y[i] / wi_prime;
@@ -174,7 +204,7 @@ vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
     return result;
 }
 
-// Xau chuoi ham noi suy ve dang: P(x) = a0 + (a1)x^1 + (a2)x^2 +...
+// Convert to readable polynomial form: P(x) = a0 + (a1)x^1 + (a2)x^2 +...
 string lagrangePolynomialForm(vector<double> &coefficients)
 {
     ostringstream polynomial;
@@ -188,21 +218,28 @@ string lagrangePolynomialForm(vector<double> &coefficients)
     // (a1)x^1 + (a2)x^2 +...
     for (int i = 1; i < coefficients.size(); i++)
     {   
-        if (polynomial.str().empty())
+        if (coefficients[i] == 0)
         {
-            polynomial  << coefficients[i] << "x^" << i << " ";
             continue;
         }
 
-        if (coefficients[i] == 1)
+        if (polynomial.str().empty()) // In case a0 == 0
         {
-            polynomial << "+ " << "x^" << i << " ";
+            if (coefficients[i] == 1)
+            {
+                polynomial << "x^" << i << " ";
+                continue;
+            }
+            polynomial << coefficients[i] << "x^" << i << " ";
             continue;
         }
-        else if (coefficients[i] != 0)
+
+        if (coefficients[i] != 1)
         {
             polynomial << "+ " << "(" << coefficients[i] << ")" << "x^" << i << " ";
+            continue;
         }
+        polynomial << "+ " << "x^" << i << " ";
     }
     
     ostringstream result;

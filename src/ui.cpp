@@ -9,7 +9,7 @@ int main()
         cout << "--------------------------CHUONG TRINH NOI SUY LAGRANGE--------------------------" << "\n"
              << "1. Chay 1 test case." << "\n"
              << "2. Chay toan bo test case." << "\n"
-             << "Nhan q de thoat chuong trinh..." << "\n"
+             << "Nhap q de thoat chuong trinh..." << "\n"
              << "Input: ";
 
         cin >> option;
