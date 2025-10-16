@@ -5,22 +5,21 @@
 #include <vector>
 #include <iomanip>
 #include <cmath>
-#include <filesystem>
 
 // NAMESPACE
 using namespace std;
 
 // GLOBAL VALUES
-#define data_file "../data.csv" // Possible csv file path
-#define data_file_1 "data.csv"  // Possible csv file other path
-#define PRECISION 4             // Decimal precision
-#define FIRST_COLLUMN_WIDTH 8   // setw()
-#define SECOND_COLLUMN_WIDTH 40 // setw()
-#define THIRD_COLLUMN_WIDTH 32  // setw()
-#define TOTAL_WIDTH 84          // setw()
+#define PRECISION 4                  // Decimal precision
+#define FIRST_COLLUMN_WIDTH 8        // MUST BE DIVISIBLE BY 2
+#define SECOND_COLLUMN_WIDTH 48      // MUST BE DIVISIBLE BY 4
+#define THIRD_COLLUMN_WIDTH 32       // MUST BE DIVISIBLE BY 4
+#define TOTAL_WIDTH 92               // TOTAL_COLLUMN_WIDTH + (COLLUMN_COUNT + 1)
+
+string const DATA_FILE = "data.csv"; // csv file name
 
 // GLOBAL FUNCTIONS
-int dataFileCheck(vector<double> &X, vector<double> &Y, string testID);   // Check input data
+int dataCheck(vector<double> &X, vector<double> &Y, string testID);       // Check test case data
 vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y); // Find corresponding polynomial coefficients
 string lagrangePolynomialForm(vector<double> &coefficients);              // Convert to readable polynomial form
 
@@ -46,9 +45,10 @@ class TestCase
 
     string runTestCase()
     {
-        if (dataFileCheck(X, Y, testID))
+        int status = dataCheck(X, Y, testID);
+        if (status)
         {
-            return "ERROR!";
+            return "!ERROR-" + to_string(status);
         }
         vector<double> coefficients = lagrangeCoefficient(X, Y);
         return lagrangePolynomialForm(coefficients);
@@ -60,10 +60,10 @@ int main()
 {
     // Init test case vector and data file pointer
     vector<TestCase> testCases;
-    ifstream TestData(data_file);
+    ifstream TestData(DATA_FILE);
     if (!TestData.is_open()) 
     {
-        TestData.open(data_file_1);
+        TestData.open("../" + DATA_FILE);
         if (!TestData.is_open())
         {
             cerr << "Khong mo duoc file!" << endl;
@@ -139,11 +139,13 @@ int main()
                     selectedTestCaseIndex = i;
                 }
             }
+
             if (selectedTestCaseIndex == -1)
             {
                 cout << "(!) ID khong hop le." << "\n";
                 continue;
             }
+
             cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
             cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
                  << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
@@ -160,7 +162,8 @@ int main()
             cout << "\n";
             continue;
         }
-        else if (option == '2')
+
+        if (option == '2')
         {
             // RUN ALL TEST CASES 
             cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
@@ -180,23 +183,20 @@ int main()
             cout << "\n";
             continue;
         }
-        
         cout << "\n";
     }
 }
 // ---------------------------------------------------------------------------------------------------------
 
-// Check input file
-int dataFileCheck(vector<double> &X, vector<double> &Y, string testID)
+// Check test case data
+int dataCheck(vector<double> &X, vector<double> &Y, string testID)
 {
     if (X.empty() || Y.empty())
     {
-        cerr << "ERROR: Du lieu test case " << testID << " loi!";
         return 1;
     }
     if (X.size() != Y.size())
     {
-        cerr << "ERROR: So luong toa do X va Y trong test case " << testID << " khong trung nhau!";
         return 2;
     }
 
@@ -206,7 +206,6 @@ int dataFileCheck(vector<double> &X, vector<double> &Y, string testID)
         {
             if (X[i] == X[j])
             {
-                cerr << "ERROR: Toa do X trong test case " << testID << " co gia tri bi lap lai!";
                 return 3;
             }
         }
@@ -240,13 +239,14 @@ vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
             }
         }
 
-        // Scale each term with Y[i] / wi
-        for (unsigned int k = 0; k < term.size(); k++)
+        // Scale each term with Y[i] / wi 
+        for (unsigned int h = 0; h < term.size(); h++)
         {
-            result[k] += term[k] * Y[i] / wi;
+            result[h] += term[h] * Y[i] / wi;
         }
     }
 
+    // Set float precision
     for (unsigned int i = 0; i < result.size(); i++)
     {
         result[i] = round(result[i] * pow(10, PRECISION)) / pow(10,PRECISION);
