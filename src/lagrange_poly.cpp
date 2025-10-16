@@ -10,7 +10,7 @@
 using namespace std;
 
 // GLOBAL VALUES
-#define data_file "data.csv"    // Csv file
+#define data_file "../data.csv" // Csv file
 #define PRECISION 4             // Decimal precision
 #define FIRST_COLLUMN_WIDTH 8   // setw()
 #define SECOND_COLLUMN_WIDTH 40 // setw()
@@ -111,7 +111,7 @@ int main()
             cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
                  << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Test Function"
                  << "|\n";
-            for (int i = 0; i < testCases.size(); i++)
+            for (unsigned int i = 0; i < testCases.size(); i++)
             {
                 cout << "|" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "|" << "\n" << setfill(' ')
                      << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID
@@ -122,7 +122,7 @@ int main()
 
             cout << "-> Input (Nhap Test ID): ";
             cin >> selectedTestCaseID;
-            for (int i = 0; i < testCases.size(); i++)
+            for (unsigned int i = 0; i < testCases.size(); i++)
             {
                 if (!selectedTestCaseID.compare(testCases[i].testID))
                 {
@@ -155,7 +155,7 @@ int main()
                 << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
                 << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
                 << "|" << "\n";
-            for (int i = 0; i < testCases.size(); i++)
+            for (unsigned int i = 0; i < testCases.size(); i++)
             {
                 cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
                 cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID 
@@ -185,9 +185,9 @@ int dataFileCheck(vector<double> &X, vector<double> &Y, string testID)
         return 2;
     }
 
-    for (int i = 0; i < X.size(); i++)
+    for (unsigned int i = 0; i < X.size(); i++)
     {
-        for (int j = i + 1; j < X.size(); j++)
+        for (unsigned int j = i + 1; j < X.size(); j++)
         {
             if (X[i] == X[j])
             {
@@ -208,7 +208,7 @@ vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
     for (int i = 0; i < n; i++) 
     {
         vector<double> term = {1.0};
-        double wi_prime = 1.0; // Wi'
+        double wi = 1.0;
 
         for (int j = 0; j < n; j++) 
         {
@@ -221,18 +221,18 @@ vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y)
                     newTerm[k + 1] += term[k];
                 }
                 term = newTerm;
-                wi_prime *= (X[i] - X[j]);
+                wi *= (X[i] - X[j]);
             }
         }
 
-        // Scale each term with Y[i] / wi_prime
+        // Scale each term with Y[i] / wi
         for (unsigned int k = 0; k < term.size(); k++)
         {
-            result[k] += term[k] * Y[i] / wi_prime;
+            result[k] += term[k] * Y[i] / wi;
         }
     }
 
-    for (int i = 0; i < result.size(); i++)
+    for (unsigned int i = 0; i < result.size(); i++)
     {
         result[i] = round(result[i] * pow(10, PRECISION)) / pow(10,PRECISION);
     }
@@ -251,7 +251,7 @@ string lagrangePolynomialForm(vector<double> &coefficients)
     }
 
     // (a1)x^1 + (a2)x^2 +...
-    for (int i = 1; i < coefficients.size(); i++)
+    for (unsigned int i = 1; i < coefficients.size(); i++)
     {   
         if (coefficients[i] == 0)
         {
