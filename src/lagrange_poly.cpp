@@ -103,9 +103,9 @@ int main()
              << "[2] Chay toan bo test case." << "\n"
              << "Nhap 'q' de thoat chuong trinh..." << "\n"
              << "-> Input: ";
-
         cin >> option;
-        
+        cin.ignore();
+
         if (option == '1')
         {
             // RUN ONE SELECTED TEST CASE
@@ -130,6 +130,8 @@ int main()
 
             // Find test case
             cin >> selectedTestCaseID;
+            cin.ignore();
+
             for (unsigned int i = 0; i < testCases.size(); i++)
             {
                 if (!selectedTestCaseID.compare(testCases[i].testID))
@@ -178,6 +180,8 @@ int main()
             cout << "\n";
             continue;
         }
+        
+        cout << "\n";
     }
 }
 // ---------------------------------------------------------------------------------------------------------
