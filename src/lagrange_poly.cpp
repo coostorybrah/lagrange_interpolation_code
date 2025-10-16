@@ -11,8 +11,8 @@
 using namespace std;
 
 // GLOBAL VALUES
-#define data_file "../data.csv" // Csv file
-#define data_file_1 "data.csv"
+#define data_file "../data.csv" // Possible csv file path
+#define data_file_1 "data.csv"  // Possible csv file other path
 #define PRECISION 4             // Decimal precision
 #define FIRST_COLLUMN_WIDTH 8   // setw()
 #define SECOND_COLLUMN_WIDTH 40 // setw()
@@ -55,7 +55,7 @@ class TestCase
     }
 };
 
-// ----------------------------------------- CHAY CHUONG TRINH ---------------------------------------------
+// ----------------------------------------- MAIN PROGRAM ---------------------------------------------
 int main()
 {
     // Init test case vector and data file pointer
@@ -109,24 +109,26 @@ int main()
         if (option == '1')
         {
             // RUN ONE SELECTED TEST CASE
-            // Find test case
+            // Show user available test cases
             int selectedTestCaseIndex = -1;
             string selectedTestCaseID = "";
             cout << "+---------------- AVAILABLE TEST CASES ----------------+" << "\n";
             cout << "+" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "+" << "\n" << setfill(' ');
             cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
-                 << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Test Function"
-                 << "|\n";
+            << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Test Function"
+            << "|\n";
             for (unsigned int i = 0; i < testCases.size(); i++)
             {
                 cout << "|" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "|" << "\n" << setfill(' ')
-                     << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID
-                     << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[i].testFunction 
-                     << "|" << "\n";
+                << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[i].testID
+                << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[i].testFunction 
+                << "|" << "\n";
             }
             cout << "+" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "+" << "\n" << setfill(' ');
-
+            
             cout << "-> Input (Nhap Test ID): ";
+
+            // Find test case
             cin >> selectedTestCaseID;
             for (unsigned int i = 0; i < testCases.size(); i++)
             {
@@ -135,25 +137,28 @@ int main()
                     selectedTestCaseIndex = i;
                 }
             }
-            if (selectedTestCaseIndex != -1)
+            if (selectedTestCaseIndex == -1)
             {
-                cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
-                cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
-                     << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
-                     << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
-                     << "|" << "\n";
-        
-                cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
-                cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[selectedTestCaseIndex].testID 
-                     << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].runTestCase()
-                     << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].testFunction
-                     << "|" << "\n";
-                cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
-                selectedTestCaseIndex = -1;
+                cout << "(!) ID khong hop le." << "\n";
+                continue;
             }
+            cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+            cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
+                 << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
+                 << "| " << left << setw(THIRD_COLLUMN_WIDTH / 4) << "" << left << setw(THIRD_COLLUMN_WIDTH * 3 / 4) << "Actual Function" 
+                 << "|" << "\n";
+    
+            cout << "|" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "|" << "\n" << setfill(' ');
+            cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << testCases[selectedTestCaseIndex].testID 
+                 << "| " << left << setw(SECOND_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].runTestCase()
+                 << "| " << left << setw(THIRD_COLLUMN_WIDTH) << testCases[selectedTestCaseIndex].testFunction
+                 << "|" << "\n";
+            cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+            selectedTestCaseIndex = -1;
+            cout << "\n";
+            continue;
         }
-
-        if (option == '2')
+        else if (option == '2')
         {
             // RUN ALL TEST CASES 
             cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
@@ -170,10 +175,10 @@ int main()
                     << "|" << "\n";
             }
             cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
+            cout << "\n";
+            continue;
         }
-        cout << "\n";
     }
-
 }
 // ---------------------------------------------------------------------------------------------------------
 
