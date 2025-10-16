@@ -61,12 +61,12 @@ int main()
     // Init test case vector and data file pointer
     vector<TestCase> testCases;
     ifstream TestData(data_file);
-    if (!TestData)
+    if (!TestData.is_open()) 
     {
-        ifstream TestData(data_file_1);
-        if (!TestData)
+        TestData.open(data_file_1);
+        if (!TestData.is_open())
         {
-            cerr << "Khong mo duoc file!";
+            cerr << "Khong mo duoc file!" << endl;
             return 1;
         }
     }
