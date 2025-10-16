@@ -5,12 +5,14 @@
 #include <vector>
 #include <iomanip>
 #include <cmath>
+#include <filesystem>
 
 // NAMESPACE
 using namespace std;
 
 // GLOBAL VALUES
 #define data_file "../data.csv" // Csv file
+#define data_file_1 "data.csv"
 #define PRECISION 4             // Decimal precision
 #define FIRST_COLLUMN_WIDTH 8   // setw()
 #define SECOND_COLLUMN_WIDTH 40 // setw()
@@ -61,8 +63,12 @@ int main()
     ifstream TestData(data_file);
     if (!TestData)
     {
-        cerr << "Khong mo duoc file du lieu!";
-        return 1;
+        ifstream TestData(data_file_1);
+        if (!TestData)
+        {
+            cerr << "Khong mo duoc file!";
+            return 1;
+        }
     }
 
     // Read csv file
