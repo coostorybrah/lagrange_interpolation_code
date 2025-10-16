@@ -1,3 +1,4 @@
 /.vscode
+src/output
 *.exe
 !lagrange_poly.exe
