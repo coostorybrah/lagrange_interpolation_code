@@ -19,7 +19,7 @@ using namespace std;
 string const DATA_FILE = "data.csv"; // csv file name
 
 // GLOBAL FUNCTIONS
-int dataCheck(vector<double> &X, vector<double> &Y, string testID);       // Check test case data
+int dataCheck(vector<double> &X, vector<double> &Y);       // Check test case data
 vector<double> lagrangeCoefficient(vector<double> &X, vector<double> &Y); // Find corresponding polynomial coefficients
 string lagrangePolynomialForm(vector<double> &coefficients);              // Convert to readable polynomial form
 
@@ -45,7 +45,7 @@ class TestCase
 
     string runTestCase()
     {
-        int status = dataCheck(X, Y, testID);
+        int status = dataCheck(X, Y);
         if (status)
         {
             return "!ERROR-" + to_string(status);
@@ -98,7 +98,7 @@ int main()
     char option = ' ';
     while (option != 'q' && option != 'Q')
     {
-        cout << "+---------------------------- CHUONG TRINH NOI SUY LAGRANGE ----------------------------+" << "\n"
+        cout << "+------------------------------- CHUONG TRINH NOI SUY LAGRANGE -------------------------------+" << "\n"
              << "[1] Chay 1 test case." << "\n"
              << "[2] Chay toan bo test case." << "\n"
              << "Nhap 'q' de thoat chuong trinh..." << "\n"
@@ -127,11 +127,10 @@ int main()
             cout << "+" << left << setw(FIRST_COLLUMN_WIDTH + THIRD_COLLUMN_WIDTH + 2) << setfill('-') << right << "+" << "\n" << setfill(' ');
             
             cout << "-> Input (Nhap Test ID): ";
-
-            // Find test case
             cin >> selectedTestCaseID;
             cin.ignore();
 
+            // Find test case
             for (unsigned int i = 0; i < testCases.size(); i++)
             {
                 if (!selectedTestCaseID.compare(testCases[i].testID))
@@ -146,6 +145,7 @@ int main()
                 continue;
             }
 
+            // Run test case
             cout << "+" << left << setw(TOTAL_WIDTH) << setfill('-') << right << "+" << "\n" << setfill(' ');
             cout << "|" << left << setw(FIRST_COLLUMN_WIDTH / 2 - 1) << "" << left << setw(FIRST_COLLUMN_WIDTH / 2) << "ID" 
                  << "| " << left << setw(SECOND_COLLUMN_WIDTH / 4) << "" << left << setw(SECOND_COLLUMN_WIDTH * 3 / 4) << "Lagrange Polynomial" 
@@ -189,7 +189,7 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 
 // Check test case data
-int dataCheck(vector<double> &X, vector<double> &Y, string testID)
+int dataCheck(vector<double> &X, vector<double> &Y)
 {
     if (X.empty() || Y.empty())
     {
